@@ -13,7 +13,7 @@ class FaceData:
         self.races = []
 
     def load_images(self):
-        path = "UTKFace/"
+        path = "../UTKFace/"
         character = '_'
         ageMIN = 20
         ageMAX = 76

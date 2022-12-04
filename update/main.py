@@ -25,17 +25,17 @@ def main():
     races = np.array(data.races, dtype=np.int32)
 
     # Training models
-    # train.train_age_model(images, ages)
-    # train.train_gender_model(images, genders)
-    # train.train_race_model(images, races)
+    # train.train_age_model(images, ages, 'age_model_new.h5')
+    # train.train_gender_model(images, genders, 'gender_model_new.h5')
+    # train.train_race_model(images, races, 'race_model_new.h5')
 
     # Load model
-    gender_model = load_model('gender_model.h5', compile=False)
-    age_model = load_model('age_model.h5', compile=False)
-    race_model = load_model('race_model.h5', compile=False)
+    gender_model = load_model('gender_model_new.h5', compile=False)
+    age_model = load_model('age_model_new.h5', compile=False)
+    race_model = load_model('../race_model.h5', compile=False)
 
     # Prepare sample
-    test_image = utils.load_image("testData/testFace3.jpg")
+    test_image = utils.load_image("../testData/testFace3.jpg")
     test_image = utils.prepare_image_for_model_input(test_image)
 
     sample_to_predict = [test_image]
@@ -51,12 +51,14 @@ def main():
     age = int(np.rint(age_prediction[0]).astype(int))
     race = Race(int(np.rint(race_prediction[0]).astype(int))).name
 
-    print("Gender: {}, Age: {}, Race: {} => Predicted".format(gender, age, race))
+    # print("Gender: {}, Age: {}, Race: {} => Predicted".format(gender, age, race))
+    print("Gender: {}, Age: {} => Predicted".format(gender, age))
 
     final_image = cv2.cvtColor(test_image, cv2.COLOR_BGR2RGB)
     plt.imshow(final_image)
     plt.axis('off')
-    plt.title("Gender: {}, Age: {}, Race: {}".format(gender, age, race))
+    # plt.title("Gender: {}, Age: {}, Race: {}".format(gender, age, race))
+    plt.title("Gender: {}, Age: {}".format(gender, age))
     plt.show()
 
     # Testing
@@ -81,13 +83,16 @@ def infinite_test(data, gender_model, age_model, race_model, sleep):
         age = int(np.rint(age_prediction[0]).astype(int))
         race = Race(int(np.rint(race_prediction[0]).astype(int))).name
 
-        print("Gender: {}, Age: {}, Race: {} => Predicted".format(gender, age, race))  # Predicted
+        # print("Gender: {}, Age: {}, Race: {} => Predicted".format(gender, age, race))  # Predicted
+        print("Gender: {}, Age: {} => Predicted".format(gender, age))  # Predicted
         gender = "Male" if data.genders[index] < 0.5 else "Female"
-        print("Gender: {}, Age: {}, Race: {} => Real".format(gender, data.ages[index], Race(data.races[index]).name))  # Real
+        # print("Gender: {}, Age: {}, Race: {} => Real".format(gender, data.ages[index], Race(data.races[index]).name))  # Real
+        print("Gender: {}, Age: {} => Real".format(gender, data.ages[index]))  # Real
         final_image = cv2.cvtColor(test_image, cv2.COLOR_BGR2RGB)
         plt.imshow(final_image)
         plt.axis('off')
-        plt.title("Gender: {}, Age: {}, Race: {}".format(gender, age, race))
+        # plt.title("Gender: {}, Age: {}, Race: {}".format(gender, age, race))
+        plt.title("Gender: {}, Age: {}".format(gender, age))
         plt.show()
         time.sleep(sleep)
 

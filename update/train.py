@@ -9,7 +9,7 @@ from enum import Enum
 
 class Train:
     @staticmethod
-    def train_age_model(images, ages):
+    def train_age_model(images, ages, filename):
         # Creating training and testing data
         x_train_age, x_test_age, y_train_age, y_test_age = train_test_split(images, ages,
                                                                             random_state=42, stratify=ages)
@@ -45,7 +45,7 @@ class Train:
                                     )])
 
         # Save the model to file
-        age_model.save('age_model.h5')
+        age_model.save(filename)
 
         # Model accuracy
         predictions = age_model.predict(x_test_age)
@@ -58,8 +58,9 @@ class Train:
             return sum(acc) / len(y_pred)
 
         print("Accuracy = ", accuracy(y_pred, y_test_age))
+
     @staticmethod
-    def train_gender_model(images, genders):
+    def train_gender_model(images, genders, filename):
         # Creating training and testing data
         x_train_gender, x_test_gender, y_train_gender, y_test_gender = train_test_split(images, genders,
                                                                                         random_state=42,
@@ -92,7 +93,7 @@ class Train:
 
         # Train the model
         history_gender = gender_model.fit(x_train_gender, y_train_gender, validation_data=(x_test_gender, y_test_gender),
-                                       epochs=20,
+                                       epochs=50,
                                        callbacks=[tf.keras.callbacks.EarlyStopping(
                                            monitor='val_loss',
                                            patience=5,
@@ -100,7 +101,7 @@ class Train:
                                        )])
 
         # Save the model to file
-        gender_model.save('gender_model.h5')
+        gender_model.save(filename)
 
         # Model accuracy
         predictions = gender_model.predict(x_test_gender)
@@ -108,7 +109,7 @@ class Train:
         print("Accuracy = ", metrics.accuracy_score(y_test_gender, y_pred))
 
     @staticmethod
-    def train_race_model(images, races):
+    def train_race_model(images, races, filename):
         # Creating training and testing data
         x_train_race, x_test_race, y_train_race, y_test_race = train_test_split(images, races,
                                                                                 random_state=42, stratify=races)
@@ -150,10 +151,15 @@ class Train:
                                           )])
 
         # Save the model to file
-        race_model.save('race_model.h5')
+        race_model.save(filename)
 
         # Model accuracy
+
+        loss_function = tf.keras.losses.SparseCategoricalCrossentropy()
+
         predictions = race_model.predict(x_test_race)
+        loss = loss_function(y_test_race, predictions)
+        print('Loss = ', loss)
         y_pred = (np.rint(predictions)).astype(int)[:, 0]
         print("Accuracy = ", metrics.accuracy_score(y_test_race, y_pred))
 
