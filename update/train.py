@@ -5,7 +5,7 @@ from keras.models import Sequential
 from sklearn import metrics
 import tensorflow as tf
 from enum import Enum
-
+import matplotlib.pyplot as plt
 
 class Train:
     @staticmethod
@@ -13,6 +13,12 @@ class Train:
         # Creating training and testing data
         x_train_age, x_test_age, y_train_age, y_test_age = train_test_split(images, ages,
                                                                             random_state=42, stratify=ages)
+        plt.figure(1)
+        plt.hist(y_train_age, bins=56)
+        plt.figure(2)
+        plt.hist(y_test_age, bins=56)
+        plt.show()
+
 
         # Creating the network
         age_model = Sequential()
@@ -66,6 +72,12 @@ class Train:
                                                                                         random_state=42,
                                                                                         stratify=genders)
 
+        plt.figure(1)
+        plt.hist(y_train_gender, bins=2)
+        plt.figure(2)
+        plt.hist(y_test_gender, bins=2)
+        plt.show()
+
         # Creating the network
         gender_model = Sequential()
         gender_model.add(Conv2D(36, kernel_size=3, activation='relu', input_shape=(200, 200, 3)))
@@ -114,6 +126,12 @@ class Train:
         x_train_race, x_test_race, y_train_race, y_test_race = train_test_split(images, races,
                                                                                 random_state=42, stratify=races)
 
+        plt.figure(1)
+        plt.hist(y_train_race, bins=5)
+        plt.figure(2)
+        plt.hist(y_test_race, bins=5)
+        plt.show()
+
         shape = images[0].shape
         # Creating the network
         race_model = Sequential()
@@ -138,7 +156,7 @@ class Train:
         race_model.add(Dense(5, activation='softmax', name='race'))
 
         # Compile the model
-        race_model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy']) # TODO pobawić się tym
+        race_model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy']) # loss żeby był %
 
         # Train the model
         history_gender = race_model.fit(x_train_race, y_train_race,
