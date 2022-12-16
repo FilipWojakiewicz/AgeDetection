@@ -140,12 +140,14 @@ class Train:
                                           )])
 
         # Save the model to file
-        race_model.save('race_model.h5')
+        race_model.save('race_model_new.h5')
 
         # Model accuracy
-        predictions = race_model.predict(x_test_race)
-        y_pred = (np.rint(predictions)).astype(int)[:, 0]
-        print("Accuracy = ", metrics.accuracy_score(y_test_race, y_pred))
+        score = race_model.evaluate(x_test_race, y_test_race, verbose=0)
+        print(f'Test loss: {score[0]} / Test accuracy: {score[1]}')
+        # predictions = race_model.predict(x_test_race)
+        # y_pred = (np.rint(predictions)).astype(int)[:, 0]
+        # print("Accuracy = ", metrics.accuracy_score(y_test_race, y_pred))
 
 
 class Gender(Enum):

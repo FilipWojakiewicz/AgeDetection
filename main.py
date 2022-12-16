@@ -30,9 +30,9 @@ def main():
     # train.train_race_model(images, races)
 
     # Load model
-    gender_model = load_model('gender_model.h5', compile=False)
-    age_model = load_model('age_model.h5', compile=False)
-    race_model = load_model('race_model.h5', compile=False)
+    gender_model = load_model('gender_model_new.h5', compile=False)
+    age_model = load_model('age_model_new.h5', compile=False)
+    race_model = load_model('race_model_new.h5', compile=False)
 
     # Prepare sample
     test_image = utils.load_image("testData/testFace3.jpg")
@@ -46,10 +46,17 @@ def main():
     age_prediction = age_model.predict(sample_to_predict)
     race_prediction = race_model.predict(sample_to_predict)
 
+    lst = race_prediction[0].tolist()
+    max_index = lst.index(max(lst))
+    # print(Race(max_index).name)
+    # for x in lst:
+    #     print(x)
+
     # Print/show predictions
     gender = Gender.Male.name if gender_prediction[0] < 0.5 else Gender.Female.name
     age = int(np.rint(age_prediction[0]).astype(int))
-    race = Race(int(np.rint(race_prediction[0]).astype(int))).name
+    # race = Race(int(np.rint(race_prediction[0]).astype(int))).name
+    race = Race(max_index).name
 
     print("Gender: {}, Age: {}, Race: {} => Predicted".format(gender, age, race))
 
@@ -79,7 +86,10 @@ def infinite_test(data, gender_model, age_model, race_model, sleep):
 
         gender = Gender.Male.name if gender_prediction[0] < 0.5 else Gender.Female.name
         age = int(np.rint(age_prediction[0]).astype(int))
-        race = Race(int(np.rint(race_prediction[0]).astype(int))).name
+        lst = race_prediction[0].tolist()
+        max_index = lst.index(max(lst))
+        # race = Race(int(np.rint(race_prediction[0]).astype(int))).name
+        race = Race(max_index).name
 
         print("Gender: {}, Age: {}, Race: {} => Predicted".format(gender, age, race))  # Predicted
         gender = "Male" if data.genders[index] < 0.5 else "Female"

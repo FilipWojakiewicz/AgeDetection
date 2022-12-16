@@ -27,11 +27,11 @@ def main():
     # Training models
     # train.train_age_model(images, ages, 'age_model_new.h5')
     # train.train_gender_model(images, genders, 'gender_model_new.h5')
-    # train.train_race_model(images, races, 'race_model_new.h5')
+    train.train_race_model(images, races, 'race_model_new.h5')
 
     # Load model
-    gender_model = load_model('gender_model_new.h5', compile=False)
-    age_model = load_model('age_model_new.h5', compile=False)
+    gender_model = load_model('../gender_model_new.h5', compile=False)
+    age_model = load_model('../age_model_new.h5', compile=False)
     race_model = load_model('../race_model.h5', compile=False)
 
     # Prepare sample

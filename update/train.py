@@ -156,7 +156,7 @@ class Train:
         race_model.add(Dense(5, activation='softmax', name='race'))
 
         # Compile the model
-        race_model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy']) # loss żeby był %
+        race_model.compile(optimizer='adam', loss=tf.keras.losses.SparseCategoricalCrossentropy, metrics=['accuracy']) # loss żeby był %
 
         # Train the model
         history_gender = race_model.fit(x_train_race, y_train_race,
@@ -172,14 +172,16 @@ class Train:
         race_model.save(filename)
 
         # Model accuracy
+        score = race_model.evaluate(x_test_race, y_test_race, verbose=0)
+        print(f'Test loss: {score[0]} / Test accuracy: {score[1]}')
 
-        loss_function = tf.keras.losses.SparseCategoricalCrossentropy()
-
-        predictions = race_model.predict(x_test_race)
-        loss = loss_function(y_test_race, predictions)
-        print('Loss = ', loss)
-        y_pred = (np.rint(predictions)).astype(int)[:, 0]
-        print("Accuracy = ", metrics.accuracy_score(y_test_race, y_pred))
+        # loss_function = tf.keras.losses.SparseCategoricalCrossentropy()
+        #
+        # predictions = race_model.predict(x_test_race)
+        # loss = loss_function(y_test_race, predictions)
+        # print('Loss = ', loss)
+        # y_pred = (np.rint(predictions)).astype(int)[:, 0]
+        # print("Accuracy = ", metrics.accuracy_score(y_test_race, y_pred))
 
 
 class Gender(Enum):
