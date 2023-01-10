@@ -5,7 +5,7 @@ class Utils:
     @staticmethod
     def prepare_image_for_model_input(image):
         cropped_image = image
-        face_cascade = cv2.CascadeClassifier("../haarcascade_frontalface_default.xml")
+        face_cascade = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
         faces = face_cascade.detectMultiScale(

@@ -10,15 +10,19 @@ import matplotlib.pyplot as plt
 class Train:
     @staticmethod
     def train_age_model(images, ages, filename):
-        # Creating training and testing data
+        # Creating training and testing data 1632
         x_train_age, x_test_age, y_train_age, y_test_age = train_test_split(images, ages,
                                                                             random_state=42, stratify=ages)
+        # print(len(y_train_age), len(y_test_age))
         plt.figure(1)
-        plt.hist(y_train_age, bins=56)
+        plt.hist(y_train_age, bins=100)
         plt.figure(2)
-        plt.hist(y_test_age, bins=56)
+        plt.hist(y_test_age, bins=100)
         plt.show()
 
+        age_intervals = ['(1,5)', '(6,10)', '(11,15)', '(16,20)', '(21,25)', '(26,30)', '(31,35)', '(36,40)',
+                         '(41,45)', '(46,50)', '(51,55)', '(56,60)', '(61,65)', '(66,70)', '(71,75)', '(76,80)',
+                         '(81,85)', '(86,90)', '(91,95)', '(96,100)']
 
         # Creating the network
         age_model = Sequential()
@@ -37,10 +41,10 @@ class Train:
         age_model.add(Flatten())
         age_model.add(Dropout(0.2))
         age_model.add(Dense(512, activation='relu'))
-        age_model.add(Dense(1, activation='linear', name='age'))
+        age_model.add(Dense(1, activation='softmax', name='age'))
 
         # Compile the model
-        age_model.compile(optimizer='adam', loss='mse', metrics=['mae'])
+        age_model.compile(optimizer='adam', loss=tf.keras.losses.SparseCategoricalCrossentropy, metrics=['mae'])
 
         # Train the model
         history_age = age_model.fit(x_train_age, y_train_age, validation_data=(x_test_age, y_test_age), epochs=50,
@@ -54,16 +58,21 @@ class Train:
         age_model.save(filename)
 
         # Model accuracy
-        predictions = age_model.predict(x_test_age)
-        y_pred = (np.rint(predictions)).astype(int)[:, 0]
-        #print("Accuracy = ", metrics.accuracy_score(y_test_age, y_pred))  # Add range based metrics
 
-        def accuracy(y_pred, y_test_age):
-            acc = [1 for pred, age in zip(y_pred, y_test_age) if pred in range(age - 5, age + 5)]
+        # Old solution
 
-            return sum(acc) / len(y_pred)
+        # predictions = age_model.predict(x_test_age)
+        # y_pred = (np.rint(predictions)).astype(int)[:, 0]
+        #
+        # def accuracy(y_pred, y_test_age):
+        #     acc = [1 for pred, age in zip(y_pred, y_test_age) if pred in range(age - 5, age + 5)]
+        #
+        #     return sum(acc) / len(y_pred)
+        #
+        # print("Accuracy = ", accuracy(y_pred, y_test_age))
 
-        print("Accuracy = ", accuracy(y_pred, y_test_age))
+        score = age_model.evaluate(x_test_age, y_test_age, verbose=0)
+        print(f'Test loss: {score[0]} / Test accuracy: {score[1]}')
 
     @staticmethod
     def train_gender_model(images, genders, filename):
@@ -153,7 +162,7 @@ class Train:
         race_model.add(Flatten())
         race_model.add(Dropout(0.2))
         race_model.add(Dense(512, activation='relu'))
-        race_model.add(Dense(5, activation='softmax', name='race'))
+        race_model.add(Dense(5, activation='softmax', name='race')) #softmax też do wieku
 
         # Compile the model
         race_model.compile(optimizer='adam', loss=tf.keras.losses.SparseCategoricalCrossentropy, metrics=['accuracy']) # loss żeby był %
